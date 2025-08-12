@@ -1,0 +1,103 @@
+﻿{
+    "generatedAt":  "2025-08-12T18:02:01.7415259-05:00",
+    "daysToShow":  5,
+    "maxItems":  30,
+    "timeFormat":  "h:mm tt",
+    "dateFormat":  "ddd MMM d",
+    "days":  [
+                 {
+                     "dateHeader":  "Tue Aug 12",
+                     "date":  "2025-08-12",
+                     "events":  [
+                                    {
+                                        "start":  "2025-08-12T12:00:00.0000000",
+                                        "end":  "2025-08-12T12:10:00.0000000",
+                                        "subject":  "Lunch",
+                                        "status":  "past",
+                                        "text":  "   12:00 PM Lunch"
+                                    },
+                                    {
+                                        "start":  "2025-08-12T14:00:00.0000000",
+                                        "end":  "2025-08-12T14:25:00.0000000",
+                                        "subject":  "Canceled: JPCI - ...",
+                                        "status":  "past",
+                                        "text":  "   2:00 PM Canceled: JPCI - ..."
+                                    },
+                                    {
+                                        "start":  "2025-08-12T18:30:00.0000000",
+                                        "end":  "2025-08-12T18:55:00.0000000",
+                                        "subject":  "test",
+                                        "status":  "normal",
+                                        "text":  "   6:30 PM test"
+                                    }
+                                ]
+                 },
+                 {
+                     "dateHeader":  "Wed Aug 13",
+                     "date":  "2025-08-13",
+                     "events":  [
+                                    {
+                                        "start":  "2025-08-13T08:30:00.0000000",
+                                        "end":  "2025-08-13T10:00:00.0000000",
+                                        "subject":  "Canceled: Going B...",
+                                        "status":  "normal",
+                                        "text":  "   8:30 AM Canceled: Going B..."
+                                    },
+                                    {
+                                        "start":  "2025-08-13T10:00:00.0000000",
+                                        "end":  "2025-08-13T11:00:00.0000000",
+                                        "subject":  "Weekly Update",
+                                        "status":  "normal",
+                                        "text":  "   10:00 AM Weekly Update"
+                                    },
+                                    {
+                                        "start":  "2025-08-13T12:00:00.0000000",
+                                        "end":  "2025-08-13T12:10:00.0000000",
+                                        "subject":  "Lunch",
+                                        "status":  "normal",
+                                        "text":  "   12:00 PM Lunch"
+                                    }
+                                ]
+                 },
+                 {
+                     "dateHeader":  "Thu Aug 14",
+                     "date":  "2025-08-14",
+                     "events":  [
+                                    {
+                                        "start":  "2025-08-14T10:30:00.0000000",
+                                        "end":  "2025-08-14T11:00:00.0000000",
+                                        "subject":  "Canceled: Weekly ...",
+                                        "status":  "normal",
+                                        "text":  "   10:30 AM Canceled: Weekly ..."
+                                    },
+                                    {
+                                        "start":  "2025-08-14T12:00:00.0000000",
+                                        "end":  "2025-08-14T12:10:00.0000000",
+                                        "subject":  "Lunch",
+                                        "status":  "normal",
+                                        "text":  "   12:00 PM Lunch"
+                                    },
+                                    {
+                                        "start":  "2025-08-14T15:00:00.0000000",
+                                        "end":  "2025-08-14T16:00:00.0000000",
+                                        "subject":  "SoftChoice x Jasc...",
+                                        "status":  "normal",
+                                        "text":  "   3:00 PM SoftChoice x Jasc..."
+                                    }
+                                ]
+                 },
+                 {
+                     "dateHeader":  "Fri Aug 15",
+                     "date":  "2025-08-15",
+                     "events":  [
+                                    {
+                                        "start":  "2025-08-15T12:00:00.0000000",
+                                        "end":  "2025-08-15T12:10:00.0000000",
+                                        "subject":  "Lunch",
+                                        "status":  "normal",
+                                        "text":  "   12:00 PM Lunch"
+                                    }
+                                ]
+                 }
+             ]
+}
