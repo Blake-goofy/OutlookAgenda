@@ -190,6 +190,7 @@ AntiAlias=1
 StringAlign=Left
 DynamicVariables=1
 LeftMouseUpAction=[!CommandMeasure "MeasureOpenOutlook" "Run"]
+ToolTipText=Click to open calendar
 
 "@
         $lastMeterName = $headerMeterName
