@@ -87,6 +87,35 @@ if ($events -and $events.Count -gt 0) {
             $eventEnd = $d
             try { if ($evt.End) { $eventEnd = [DateTime]$evt.End } else { $eventEnd = $d.AddMinutes(30) } } catch {}
 
+            # Calculate duration
+            $duration = $eventEnd - $d
+            $durationText = if ($duration.TotalMinutes -lt 60) {
+                "{0} min" -f [Math]::Round($duration.TotalMinutes)
+            } else {
+                $hours = [Math]::Floor($duration.TotalHours)
+                $minutes = $duration.Minutes
+                if ($minutes -eq 0) {
+                    "{0} hr" -f $hours
+                } else {
+                    "{0}h {1}m" -f $hours, $minutes
+                }
+            }
+
+            # Get location
+            $location = [string]$evt.Location
+            if ([string]::IsNullOrWhiteSpace($location)) { $location = "" }
+
+            # Get EntryID for opening specific event
+            $entryId = ""
+            try { $entryId = [string]$evt.EntryID } catch {}
+
+            # Build tooltip
+            $tooltip = if ($location) {
+                "$durationText - $location"
+            } else {
+                $durationText
+            }
+
             $isUpcoming = $d -gt $now -and $d -le $now.AddMinutes(15)
             $isActive   = $d -le $now -and $eventEnd -gt $now
             $isPast     = $eventEnd -lt $now
@@ -94,11 +123,13 @@ if ($events -and $events.Count -gt 0) {
             $status = if ($isPast) { 'past' } elseif ($isUpcoming -or $isActive) { 'soon' } else { 'normal' }
 
             $dayGroups[$dateHeader] += [PSCustomObject]@{
-                Start   = $d
-                End     = $eventEnd
-                Subject = $subject
-                Status  = $status
-                Line    = "   $timePart $subject"
+                Start    = $d
+                End      = $eventEnd
+                Subject  = $subject
+                Status   = $status
+                Line     = "   $timePart $subject"
+                Tooltip  = $tooltip
+                EntryId  = $entryId
             }
         } catch {
             Write-Warning "Error processing event: $_"
@@ -158,6 +189,7 @@ FontWeight=700
 AntiAlias=1
 StringAlign=Left
 DynamicVariables=1
+LeftMouseUpAction=[!CommandMeasure "MeasureOpenOutlook" "Run"]
 
 "@
         $lastMeterName = $headerMeterName
@@ -165,11 +197,31 @@ DynamicVariables=1
         foreach ($evt in $dayGroups[$day]) {
             $eventId = -join ((1..6) | ForEach-Object { '{0:X}' -f (Get-Random -Max 16) })
             $eventMeterName = "MeterDay${dayIndex}Evt$eventId"
+            $eventMeasureName = "MeasureOpenEvent$eventId"
 
             switch ($evt.Status) {
                 'soon'   { $color = '255,255,0,255' }
                 'past'   { $color = '128,128,128,255' }
                 default  { $color = '#FontColor#' }
+            }
+
+            # Create click action for opening specific event
+            $clickAction = if ($evt.EntryId) {
+                # Create individual measure for this event
+                $safeEntryId = $evt.EntryId -replace "'", "''"
+                $metersSection += @"
+[$eventMeasureName]
+Measure=Plugin
+Plugin=RunCommand
+Program=#Pwsh#
+Parameter=-NoProfile -ExecutionPolicy Bypass -Command "try { `$app = New-Object -ComObject Outlook.Application; `$item = `$app.Session.GetItemFromID('$safeEntryId'); `$item.Display(); Start-Sleep -Milliseconds 500; Add-Type -name Win32 -namespace Win32Functions -memberDefinition '[DllImport(```"user32.dll```")] public static extern IntPtr FindWindow(string lpClassName, string lpWindowName); [DllImport(```"user32.dll```")] public static extern bool SetForegroundWindow(IntPtr hWnd); [DllImport(```"user32.dll```")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);'; `$subject = `$item.Subject; if (`$subject) { `$hwnd = [Win32Functions.Win32]::FindWindow(`$null, `$subject); if (`$hwnd -ne [System.IntPtr]::Zero) { [Win32Functions.Win32]::ShowWindow(`$hwnd, 3); [Win32Functions.Win32]::SetForegroundWindow(`$hwnd) } } } catch { Write-Warning 'Failed to open event' }"
+OutputType=ANSI
+UpdateDivider=-1
+
+"@
+                "[!CommandMeasure $eventMeasureName Run]"
+            } else {
+                "[!CommandMeasure MeasureOpenOutlook Run]"
             }
 
             $metersSection += @"
@@ -186,6 +238,8 @@ AntiAlias=1
 ClipString=2
 StringAlign=Left
 DynamicVariables=1
+ToolTipText=$($evt.Tooltip)
+LeftMouseUpAction=$clickAction
 
 "@
             $lastMeterName = $eventMeterName
@@ -228,11 +282,12 @@ try {
         $eventsJson = @()
         foreach ($evt in $dayGroups[$day]) {
             $eventsJson += [PSCustomObject]@{
-                start   = $evt.Start.ToString('o')
-                end     = $evt.End.ToString('o')
-                subject = $evt.Subject
-                status  = $evt.Status
-                text    = $evt.Line
+                start    = $evt.Start.ToString('o')
+                end      = $evt.End.ToString('o')
+                subject  = $evt.Subject
+                status   = $evt.Status
+                text     = $evt.Line
+                tooltip  = $evt.Tooltip
             }
         }
         $daysJson += [PSCustomObject]@{
