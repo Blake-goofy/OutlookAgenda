@@ -78,7 +78,7 @@ if ($events -and $events.Count -gt 0) {
             if ([string]::IsNullOrWhiteSpace($subject)) { $subject = '(No subject)' }
 
             # Truncate subject to keep line neat
-            $maxSubjectLength = 20
+            $maxSubjectLength = 24
             if ($subject.Length -gt $maxSubjectLength) {
                 $subject = $subject.Substring(0, $maxSubjectLength - 3) + '...'
             }
